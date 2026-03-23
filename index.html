@@ -845,14 +845,25 @@
     .mensagem-letra {
       font-family: 'Permanent Marker', cursive;
       font-size: clamp(1rem, 2.5vw, 1.3rem);
-      color: #ddd;
+      color: #2a1f0e;
       line-height: 2;
       text-align: left;
-      background: #111;
-      border: 1px solid #2a2a2a;
+      background: url('imagens/textura.png') center/cover no-repeat;
+      border: none;
+      border-radius: 3px;
       padding: 2.5rem;
       position: relative;
       margin-top: 2rem;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .04);
+    }
+
+    .mensagem-letra::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, .18);
+      border-radius: 3px;
+      pointer-events: none;
     }
 
     .mensagem-letra::before {
@@ -1792,8 +1803,8 @@
     footer {
       background: #080808;
       text-align: center;
-      padding: 2rem 2rem 5rem;
-      color: #333;
+      padding: 2rem 2rem 7rem;
+      color: #666;
       font-size: .8rem;
       font-family: 'Permanent Marker', cursive;
       letter-spacing: .1em;
@@ -1860,6 +1871,165 @@
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
       }
     }
+
+    /* ── CONTADOR ── */
+    .contador-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .contador-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .2rem;
+    }
+
+    .contador-num {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(2.2rem, 6vw, 3.5rem);
+      color: var(--amarelo);
+      line-height: 1;
+      letter-spacing: .05em;
+    }
+
+    .contador-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .65rem;
+      color: #555;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    .contador-sep {
+      font-size: 1.5rem;
+      color: #333;
+      margin-top: -.5rem;
+    }
+
+    .contador-sub {
+      font-family: 'Permanent Marker', cursive;
+      color: #444;
+      font-size: .9rem;
+      margin-top: .5rem;
+      letter-spacing: .05em;
+    }
+
+    /* ── LIGHTBOX CAPTION ── */
+    .lightbox-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+    }
+
+    #lightbox {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .lightbox-caption {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1rem;
+      color: #aaa;
+      text-align: center;
+      max-width: 500px;
+      min-height: 1.5rem;
+      letter-spacing: .02em;
+    }
+
+    /* ── MOTIVOS STAGGER ── */
+    .motivo-card {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .motivo-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity .5s ease, transform .5s ease, border-color .3s;
+    }
+
+    .motivo-card.visible:hover {
+      transform: translateY(-4px) rotate(-.5deg);
+      border-color: var(--amarelo);
+    }
+
+    .motivo-card.visible::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--amarelo) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .motivo-card.visible:hover::before {
+      opacity: .07;
+    }
+
+    /* ── LOADING SCREEN ── */
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9998;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+    }
+
+    #loading-screen.active {
+      display: flex;
+    }
+
+    .loading-bar-wrap {
+      width: min(400px, 80vw);
+      height: 2px;
+      background: #111;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .loading-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--amarelo), var(--laranja));
+      border-radius: 999px;
+      transition: width .08s linear;
+    }
+
+    .loading-msg {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .8rem;
+      letter-spacing: .2em;
+      color: #333;
+      text-transform: uppercase;
+    }
+
+
+    .celeb-foto {
+      width: min(280px, 70vw);
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 3px solid var(--amarelo);
+      box-shadow: 0 0 40px rgba(255, 217, 61, .3);
+      margin: .5rem 0;
+      animation: pop .6s ease;
+    }
+
+
+    .type-cursor {
+      display: inline-block;
+      color: var(--amarelo);
+      animation: blink .6s step-end infinite;
+      font-weight: 100;
+    }
   </style>
 </head>
 
@@ -1890,6 +2060,20 @@
       <h1 class="hero-titulo">Ei,<br><span>Nanda</span>!</h1>
       <p class="hero-sub">Tem uma pergunta muito importante no final. Mas primeiro... deixa eu te contar uma história.
       </p>
+      <div class="contador-wrap reveal">
+        <div class="contador-item"><span class="contador-num" id="cntAnos">—</span><span
+            class="contador-label">anos</span></div>
+        <div class="contador-sep">·</div>
+        <div class="contador-item"><span class="contador-num" id="cntMeses">—</span><span
+            class="contador-label">meses</span></div>
+        <div class="contador-sep">·</div>
+        <div class="contador-item"><span class="contador-num" id="cntDias">—</span><span
+            class="contador-label">dias</span></div>
+        <div class="contador-sep">·</div>
+        <div class="contador-item"><span class="contador-num" id="cntHoras">—</span><span
+            class="contador-label">horas</span></div>
+      </div>
+      <p class="contador-sub reveal">juntos e contando 💛</p>
       <div class="hero-cta"><a href="#historia" class="btn-aventura">Começar a aventura ↓</a></div>
       <div class="scroll-hint"><span>role pra baixo</span>
         <div class="scroll-arrow"></div>
@@ -1947,20 +2131,20 @@
         <p class="reveal" style="color:#aaa;font-size:.95rem">Poderia escrever um livro. Mas vou resumir nos principais.
         </p>
         <div class="motivos-grid">
-          <div class="motivo-card reveal">
+          <div class="motivo-card reveal" style="transition-delay:0.00s">
             <div class="motivo-num">01</div>
             <div class="motivo-emoji">🕰️</div>
             <div class="motivo-titulo">O tempo com você</div>
             <p class="motivo-desc">Cada hora que passei com você valeu mais do que muitos meses inteiros. Sua companhia
               tem um peso diferente.</p>
           </div>
-          <div class="motivo-card reveal">
+          <div class="motivo-card reveal" style="transition-delay:0.12s">
             <div class="motivo-num">02</div>
             <div class="motivo-emoji">🧠</div>
             <div class="motivo-titulo">Sua inteligência</div>
             <p class="motivo-desc">Conversar com você nunca é monótono. Você pensa diferente e isso me fascina.</p>
           </div>
-          <div class="motivo-card reveal">
+          <div class="motivo-card reveal" style="transition-delay:0.24s">
             <div class="motivo-num">03</div>
             <div class="motivo-emoji">🫂</div>
             <div class="motivo-titulo">Seu coração</div>
@@ -1974,14 +2158,14 @@
             <p class="motivo-desc">Afiliada de sucesso, olho afiado pro que vende... clica aqui pra ver onde eu quero
               chegar com isso 👀</p>
           </div>
-          <div class="motivo-card reveal">
+          <div class="motivo-card reveal" style="transition-delay:0.36s">
             <div class="motivo-num">05</div>
             <div class="motivo-emoji">🎯</div>
             <div class="motivo-titulo">Sua personalidade</div>
             <p class="motivo-desc">Você é verdadeira. Sem filtro desnecessário. E isso é o que me prendeu de verdade.
             </p>
           </div>
-          <div class="motivo-card reveal">
+          <div class="motivo-card reveal" style="transition-delay:0.48s">
             <div class="motivo-num">06</div>
             <div class="motivo-emoji">🔥</div>
             <div class="motivo-titulo">Você é a Nanda</div>
@@ -2002,7 +2186,8 @@
           <button class="tab-btn" onclick="switchTab('favoritas')">⭐ Favoritas</button>
         </div>
         <div id="tab-heartopia" class="galeria-grid reveal">
-          <div class="gal-item featured"><img src="imagens/her_01.jpg" loading="lazy"></div>
+          <div class="gal-item featured" data-caption="Olha lá a mãe do Brayam 🐳"><img src="imagens/her_01.jpg"
+              loading="lazy"></div>
           <div class="gal-item"><img src="imagens/her_02.jpg" loading="lazy"></div>
           <div class="gal-item"><img src="imagens/her_03.jpg" loading="lazy"></div>
           <div class="gal-item"><img src="imagens/her_04.jpg" loading="lazy"></div>
@@ -2019,7 +2204,8 @@
           <div class="gal-item"><img src="imagens/her_15.jpg" loading="lazy"></div>
         </div>
         <div id="tab-rp" class="galeria-grid reveal" style="display:none">
-          <div class="gal-item featured"><img src="imagens/rp_01.png" loading="lazy"></div>
+          <div class="gal-item featured" data-caption="Luther e Nanda Caccini"><img src="imagens/rp_01.png"
+              loading="lazy"></div>
           <div class="gal-item"><img src="imagens/rp_02.png" loading="lazy"></div>
           <div class="gal-item"><img src="imagens/rp_03.png" loading="lazy"></div>
           <div class="gal-item"><img src="imagens/rp_04.png" loading="lazy"></div>
@@ -2038,7 +2224,8 @@
               <div class="easter-sub">clica de novo se tiver coragem</div>
             </div>
           </div>
-          <div class="gal-item"><img src="imagens/fav_01.png" loading="lazy"></div>
+          <div class="gal-item featured" data-caption="A melhor! Simples assim."><img src="imagens/fav_01.png"
+              loading="lazy"></div>
           <div class="gal-item"><img src="imagens/fav_02.jpg" loading="lazy"></div>
           <div class="gal-item"><img src="imagens/fav_03.jpg" loading="lazy"></div>
         </div>
@@ -2059,7 +2246,6 @@
           Eu, o Kt, o Luther Klaus — todos chegaram na mesma conclusão: você é especial do jeito mais real
           possível.<br><br>
           E aí chegou a hora de parar de agir como se eu não sentisse o que sinto.<br><br>
-          <em style="color:var(--amarelo)">— vai lá no final do site 😬</em>
         </div>
         <p class="mensagem-assinatura reveal">Com carinho, Marcus 💛</p>
       </div>
@@ -2078,7 +2264,7 @@
     <section id="pergunta">
       <div class="pergunta-inner">
         <p class="secao-label reveal">— o grande momento —</p>
-        <h2 class="pergunta-titulo reveal">Nanda,<br>quer ser<br>minha<br><span>namorada?</span></h2>
+        <h2 class="pergunta-titulo reveal" id="perguntaTitulo"></h2>
         <p class="pergunta-sub reveal">Sim, eu sei. Fiz um site inteiro só pra perguntar isso. Sem arrependimento.</p>
         <div class="resposta-btns reveal">
           <button class="btn-sim" onclick="abrirModalSim()">💛 CLARO QUE SIM!</button>
@@ -2117,8 +2303,12 @@
       <div class="confetti-container" id="confettiContainer"></div>
       <div class="celeb-emoji">🎉</div>
       <h2 class="celeb-titulo">YESSSSS!!!</h2>
-      <p class="celeb-sub">Agora é oficial! 💛<br>Bem-vinda, Sra. Caccini!<br><span class="riscado">Se quiser posso
-          deixar mais romântico.<br>(É meme eu que coloquei isso 👀)</span></p>
+      <img src="imagens/rp_01.png" class="celeb-foto" alt="nós">
+      <p class="celeb-sub">
+        Agora é oficial 💛.<br>
+        Eu e você, de verdade.<br>
+        <span style="font-size:.9em;color:#aaa;font-style:italic">E que seja só o começo.</span>
+      </p>
       <button onclick="fecharCelebracao()"
         style="margin-top:3rem;font-family:'Bebas Neue',cursive;font-size:1.2rem;letter-spacing:.1em;background:var(--amarelo);color:#000;border:none;padding:.8rem 2.5rem;cursor:pointer;">Fechar
         ✨</button>
@@ -2238,9 +2428,11 @@
     </div>
 
     <!-- Lightbox -->
-    <div id="lightbox" onclick="closeLightbox()">
+    <div id="lightbox">
       <div id="lightbox-close" onclick="closeLightbox()">✕</div>
-      <img id="lightbox-img" src="" alt="">
+      <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+      <div class="lightbox-backdrop" onclick="closeLightbox()"></div>
     </div>
 
     <audio id="audioEl"></audio>
@@ -2252,11 +2444,65 @@
       }, { threshold: 0.1 });
       document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+      // motivos stagger — observe each card separately
+      const motivoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+      }, { threshold: 0.15 });
+      document.querySelectorAll('.motivo-card').forEach(el => motivoObserver.observe(el));
+
+      // ===== CONTADOR DE TEMPO =====
+      function atualizarContador() {
+        const inicio = new Date('2024-08-01T21:01:00'); // ← AJUSTE A DATA QUE SE CONHECERAM
+        const agora = new Date();
+        const diff = agora - inicio;
+
+        const totalDias = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const anos = Math.floor(totalDias / 365);
+        const meses = Math.floor((totalDias % 365) / 30);
+        const dias = Math.floor((totalDias % 365) % 30);
+        const horas = agora.getHours();
+
+        document.getElementById('cntAnos').textContent = anos;
+        document.getElementById('cntMeses').textContent = meses;
+        document.getElementById('cntDias').textContent = dias;
+        document.getElementById('cntHoras').textContent = horas;
+      }
+      atualizarContador();
+      setInterval(atualizarContador, 60000); // atualiza a cada minuto
+
+      // ===== LIGHTBOX COM CAPTION =====
+      document.querySelectorAll('.gal-item:not(.easter-item)').forEach(item => {
+        item.addEventListener('click', () => {
+          const src = item.querySelector('img')?.src;
+          if (!src) return;
+          document.getElementById('lightbox-img').src = src;
+          const cap = item.getAttribute('data-caption') || '';
+          document.getElementById('lightbox-caption').textContent = cap;
+          document.getElementById('lightbox').classList.add('open');
+        });
+      });
+
       // ===== AUDIO =====
       const audioEl = document.getElementById('audioEl');
       audioEl.volume = 0.25;
       let currentTrack = 0, isPlaying = false, isMuted = false, prevVol = 0.25;
-      const TRACKS = [{ "src": "musicas/copia_proibida.mp3", "title": "C\u00f3pia Proibida", "artist": "Leo Foguete", "search": "Copia Proibida Leo Foguete" }, { "src": "musicas/vem_pra_minha_vida.mp3", "title": "Vem pra Minha Vida", "artist": "Henrique e Juliano", "search": "Vem pra Minha Vida Henrique Juliano" }, { "src": "musicas/me_leva.mp3", "title": "Me Leva (Ac\u00fastico)", "artist": "Delacruz", "search": "Me Leva Delacruz" }, { "src": "musicas/mundo_de_ilusoes.mp3", "title": "Mundo de Ilus\u00f5es", "artist": "3030", "search": "Mundo de Ilusoes 3030" }, { "src": "musicas/o_mundo_e_ela.mp3", "title": "O Mundo e Ela", "artist": "3030", "search": "O Mundo e Ela 3030" }, { "src": "musicas/abre_a_porta.mp3", "title": "Abre a Porta", "artist": "L7NNON", "search": "Abre a Porta L7NNON" }, { "src": "musicas/berenice.mp3", "title": "Berenice", "artist": "BIN, L7NNON, Dfideliz", "search": "Berenice BIN L7NNON" }, { "src": "musicas/andressa.mp3", "title": "Andressa (Ac\u00fastico)", "artist": "Delacruz", "search": "Andressa Delacruz" }, { "src": "musicas/lua.mp3", "title": "Lua", "artist": "Ivandro", "search": "Lua Ivandro" }, { "src": "musicas/planeta.mp3", "title": "Planeta", "artist": "Bispo ft. B\u00e1rbara Tinoco", "search": "Planeta Bispo Barbara Tinoco" }, { "src": "musicas/beijo_teu.mp3", "title": "Beijo Teu", "artist": "Arag\u00e3o", "search": "Beijo Teu Aragao" }, { "src": "musicas/rosas.mp3", "title": "Rosas", "artist": "Kappa Jotta feat. Mun", "search": "Rosas Kappa Jotta" }, { "src": "musicas/amor_de_agosto.mp3", "title": "Amor de Agosto", "artist": "Aragão ft. Mariana P.", "search": "Amor de Agosto Aragao" }, { "src": "musicas/2222.mp3", "title": "2222", "artist": "X-Tense", "search": "2222 X-Tense" }, { "src": "musicas/ella_baila_sola.mp3", "title": "Ella Baila Sola", "artist": "Eslabon Armado, Peso Pluma", "search": "Ella Baila Sola Eslabon Armado" }];
+      const TRACKS = [
+        { "src": "musicas/copia_proibida.mp3", "title": "Cópia Proibida", "artist": "Leo Foguete", "search": "Copia Proibida Leo Foguete" },
+        { "src": "musicas/vem_pra_minha_vida.mp3", "title": "Vem pra Minha Vida", "artist": "Henrique e Juliano", "search": "Vem pra Minha Vida Henrique Juliano" },
+        { "src": "musicas/abre_a_porta.mp3", "title": "Abre a Porta", "artist": "L7NNON", "search": "Abre a Porta L7NNON" },
+        { "src": "musicas/andressa.mp3", "title": "Andressa (Acústico)", "artist": "Delacruz", "search": "Andressa Delacruz" },
+        { "src": "musicas/rosas.mp3", "title": "Rosas", "artist": "Kappa Jotta feat. Mun", "search": "Rosas Kappa Jotta" },
+        { "src": "musicas/2222.mp3", "title": "2222", "artist": "X-Tense", "search": "2222 X-Tense" },
+        { "src": "musicas/beijo_teu.mp3", "title": "Beijo Teu", "artist": "Aragão", "search": "Beijo Teu Aragao" },
+        { "src": "musicas/amor_de_agosto.mp3", "title": "Amor de Agosto", "artist": "Aragão ft. Mariana P.", "search": "Amor de Agosto Aragao" },
+        { "src": "musicas/lua.mp3", "title": "Lua", "artist": "Ivandro", "search": "Lua Ivandro" },
+        { "src": "musicas/planeta.mp3", "title": "Planeta", "artist": "Bispo ft. Bárbara Tinoco", "search": "Planeta Bispo Barbara Tinoco" },
+        { "src": "musicas/ella_baila_sola.mp3", "title": "Ella Baila Sola", "artist": "Eslabon Armado, Peso Pluma", "search": "Ella Baila Sola Eslabon Armado" },
+        { "src": "musicas/me_leva.mp3", "title": "Me Leva (Acústico)", "artist": "Delacruz", "search": "Me Leva Delacruz" },
+        { "src": "musicas/berenice.mp3", "title": "Berenice", "artist": "BIN, L7NNON, Dfideliz", "search": "Berenice BIN L7NNON" },
+        { "src": "musicas/o_mundo_e_ela.mp3", "title": "O Mundo e Ela", "artist": "3030", "search": "O Mundo e Ela 3030" },
+        { "src": "musicas/mundo_de_ilusoes.mp3", "title": "Mundo de Ilusões", "artist": "3030", "search": "Mundo de Ilusoes 3030" }
+      ];
       const artCache = {};
 
       async function fetchArt(q) {
@@ -2403,15 +2649,97 @@
 
       function entrarNoSite() {
         const splash = document.getElementById('velox-splash');
-        splash.style.transition = 'opacity .8s ease'; splash.style.opacity = '0';
+        const loading = document.getElementById('loading-screen');
+
+        // 1. Fade out splash
+        splash.style.transition = 'opacity .6s ease';
+        splash.style.opacity = '0';
+
         setTimeout(() => {
           splash.style.display = 'none';
-          document.getElementById('site-main').style.display = 'block';
-          document.getElementById('playerBar').style.display = 'flex';
-          initParticles();
-          isPlaying = true; loadTrack(0, true); setVolume(25);
-        }, 800);
+          loading.classList.add('active');
+
+          // 2. Loading bar animation
+          const msgs = [
+            'carregando memórias...',
+            'preparando surpresas...',
+            'quase lá...',
+            '💛',
+          ];
+          const bar = document.getElementById('loadingBar');
+          const msg = document.getElementById('loadingMsg');
+          let pct = 0;
+          let msgIdx = 0;
+          const interval = setInterval(() => {
+            pct += 1.4;
+            bar.style.width = Math.min(pct, 100) + '%';
+            if (pct > 30 && msgIdx === 0) { msg.textContent = msgs[1]; msgIdx = 1; }
+            if (pct > 65 && msgIdx === 1) { msg.textContent = msgs[2]; msgIdx = 2; }
+            if (pct > 90 && msgIdx === 2) { msg.textContent = msgs[3]; msgIdx = 3; }
+            if (pct >= 100) {
+              clearInterval(interval);
+              setTimeout(() => {
+                loading.style.transition = 'opacity .5s ease';
+                loading.style.opacity = '0';
+                setTimeout(() => {
+                  loading.style.display = 'none';
+                  // 3. Show site
+                  document.getElementById('site-main').style.display = 'block';
+                  document.getElementById('playerBar').style.display = 'flex';
+                  initParticles();
+                  loadTrack(0); isPlaying = true;
+                  const pbCoverEl = document.getElementById('pbCover'); if (pbCoverEl) pbCoverEl.classList.add('spinning');
+                  const pbBtn = document.getElementById('pbPlayBtn'); if (pbBtn) { document.getElementById('iconPause').style.display = 'block'; document.getElementById('iconPlay').style.display = 'none'; }
+                  audioEl.play().catch(() => { });
+                  setVolume(25);
+                }, 500);
+              }, 300);
+            }
+          }, 35);
+        }, 650);
       }
+
+      // ── Typed pergunta — ativa quando a section entra na tela ──
+      let perguntaTyped = false;
+      const perguntaLines = ['Nanda,', 'quer ser', 'minha', 'namorada?'];
+      function typePergunta() {
+        if (perguntaTyped) return;
+        perguntaTyped = true;
+        const el = document.getElementById('perguntaTitulo');
+        if (!el) return;
+        let lineIdx = 0;
+        let charIdx = 0;
+        let current = '';
+        function typeChar() {
+          if (lineIdx >= perguntaLines.length) return;
+          const line = perguntaLines[lineIdx];
+          const isLast = lineIdx === perguntaLines.length - 1;
+          const prefix = lineIdx > 0 ? '<br>' : '';
+          if (charIdx < line.length) {
+            const typed = line.substring(0, charIdx + 1);
+            const display = isLast ? '<span>' + typed + '</span>' : typed;
+            el.innerHTML = current + prefix + display + '<span class="type-cursor">|</span>';
+            charIdx++;
+            setTimeout(typeChar, 80);
+          } else {
+            const display = isLast ? '<span>' + line + '</span>' : line;
+            current += prefix + display;
+            el.innerHTML = current;
+            lineIdx++; charIdx = 0;
+            setTimeout(typeChar, 300);
+          }
+        }
+        setTimeout(typeChar, 400);
+      }
+
+      // Observer para a section pergunta
+      const perguntaObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) typePergunta(); });
+      }, { threshold: 0.4 });
+      const perguntaSection = document.getElementById('pergunta');
+      if (perguntaSection) perguntaObserver.observe(perguntaSection);
+
+
 
       function initParticles() {
         const emojis = ['💛', '⭐', '✨', '🌟', '💫', '🔥', '🎉'];
@@ -2617,7 +2945,22 @@
       function confirmarSim() { document.getElementById('modal-sim').classList.remove('open'); celebrar(); enviar('sim'); }
 
       // ===== CELEBRAÇÃO =====
-      function celebrar() { document.getElementById('celebracao').classList.add('ativo'); dispararConfete(); }
+      function celebrar() {
+        document.getElementById('celebracao').classList.add('ativo');
+        dispararConfete();
+        const audio = document.getElementById('audioEl');
+        if (audio) {
+          const volAtual = audio.volume;
+          audio.volume = 0.85;
+          audio.play().catch(() => { });
+          setTimeout(() => {
+            const fade = setInterval(() => {
+              if (audio.volume > volAtual + 0.02) audio.volume = Math.max(volAtual, audio.volume - 0.02);
+              else { audio.volume = volAtual; clearInterval(fade); }
+            }, 200);
+          }, 8000);
+        }
+      }
       function fecharCelebracao() { document.getElementById('celebracao').classList.remove('ativo'); }
       function dispararConfete() {
         const cores = ['#FFD93D', '#FF6B35', '#4CAF50', '#E63946', '#F5F0E8', '#fff', '#8d00f0'];
@@ -2649,6 +2992,15 @@
         })
       }
     </script>
+
+    <!-- LOADING SCREEN -->
+    <div id="loading-screen" style="display:none">
+      <div class="loading-bar-wrap">
+        <div class="loading-bar" id="loadingBar"></div>
+      </div>
+      <div class="loading-msg" id="loadingMsg">preparando algo especial...</div>
+    </div>
+
 </body>
 
 </html>
